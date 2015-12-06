@@ -14,7 +14,7 @@ var options = {
 	pass: password
 };
 
-var con = mongoose.connect('mongodb://ds061984.mongolab.com:61984/it_says', options, function(err) {
+var con = mongoose.connect(process.env.DB_HOST, options, function(err) {
 	if(err) {
 		console.log(err);
 		return;
