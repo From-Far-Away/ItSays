@@ -17,8 +17,8 @@ module.exports = function(router) {
 	});
 
 	router.get('/signin', function(req, res) {
-		User.findOne({ login: req.body.login }, function(err, user) {
-			if(user.authenticate(req.body.password)) {
+		User.findOne({ login: req.query.username }, function(err, user) {
+			if(user.authenticate(req.query.password)) {
 				res.json({ message: 'connected' });
 			} else {
 				res.json({ message: 'oups' });

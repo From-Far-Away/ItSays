@@ -23,7 +23,7 @@ UserSchema.pre('save', function(next) {
 
 });
 
-UserSchema.authenticate = function(password, cb) {
+UserSchema.methods.authenticate = function(password, cb) {
 	var hash = hashMethod(password + this.salt);
 
 	if(hash === this.password) {
