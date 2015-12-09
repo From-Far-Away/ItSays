@@ -3,7 +3,7 @@ var User = require('./app/models/user');
 
 module.exports = function(router) {
 
-	var isTokenValid = function(token) {
+	var isTokenValid = function() {
 		router.use(function(req, res, next) {
 			var token = req.headers['x-access-token'] || req.query.token;
 
