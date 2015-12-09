@@ -7,10 +7,6 @@ module.exports = function(router) {
 			route = require('./app/controllers/' + file)(router);
 		}
 	});
-
-	router.get('/', function(req, res) {
-		res.json({ message: 'API yo!' });
-	});
-
+	
 	return router;
 }
