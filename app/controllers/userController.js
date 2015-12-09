@@ -1,6 +1,6 @@
 var User = require('../models/user');
 
-module.exports = function(router) {
+module.exports = function(router, isTokenValid) {
 	router.post('/signup', function(req, res) {
 		var user = new User();
 		
@@ -17,7 +17,7 @@ module.exports = function(router) {
 
 			res.json({ 
 				success: true,
-				message: 'User created!'
+				message: 'User ' + user.login + ' created!'
 			});
 		});
 	});
@@ -40,6 +40,10 @@ module.exports = function(router) {
 			}
 		});
 	});
+
+	// -------- TOKEN VERIFICATION 
+
+	isTokenValid();
 
 	router.put('/user/:id', function(req, res) {
 		User.findById(req.params.id, function(findErr, user) {

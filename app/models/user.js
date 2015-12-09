@@ -9,7 +9,7 @@ var UserSchema = new Schema({
 	login: { type: String, unique: true, index: true, required: true },
 	password: { type: String, required: true },
 	salt: Buffer,
-	token: { type: String, default: null },
+	token: { type: String, unique: true, index: true, default: null },
 	created_at: { type: Date },
 	updated_at: { type: Date }
 });
@@ -50,5 +50,9 @@ UserSchema.methods.isAuthenticated = function(password) {
 		return false;
 	}
 };
+
+UserSchema.methods.isTokenValid = function(token) {
+	
+}
 
 module.exports = mongoose.model('User', UserSchema);
