@@ -1,13 +1,15 @@
 var mongoose = require('mongoose');
 var hashMethod = require('crypto-js/sha256');
 var crypto = require('crypto');
+var uid = require('rand-token').uid;
 
 var Schema = mongoose.Schema;
 
 var UserSchema = new Schema({
 	login: { type: String, unique: true, index: true, required: true },
 	password: { type: String, required: true },
-	salt: String
+	salt: Buffer,
+	token: { type: String, default: null }
 });
 
 UserSchema.pre('save', function(next) {
@@ -17,16 +19,20 @@ UserSchema.pre('save', function(next) {
 		return next();
 	}
 
-	user.salt = "" + crypto.randomBytes(16);
+	user.salt = crypto.randomBytes(16);
 	user.password = hashMethod(user.password + user.salt);
-	next();
 
+	next();
 });
 
-UserSchema.methods.authenticate = function(password, cb) {
+UserSchema.methods.authenticate = function(password) {
 	var hash = hashMethod(password + this.salt);
 
-	if(hash === this.password) {
+	if(hash.toString() === this.password) {
+		this.token = uid(128);
+
+		this.save();
+
 		return true;
 	} else {
 		return false;
