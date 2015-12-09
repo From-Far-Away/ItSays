@@ -41,19 +41,32 @@ module.exports = function(router, isTokenValid) {
 		});
 	});
 
-	// -------- TOKEN VERIFICATION 
+	// -------- TOKEN VERIFICATION FIREWALL
 
 	isTokenValid();
 
 	router.put('/user/:id', function(req, res) {
 		User.findById(req.params.id, function(findErr, user) {
 			if(findErr) {
-				res.json({
+				return res.json({
 					success: false,
 					message: findErr
 				});
 			}
 
+			if(!user) {
+				return res.json({
+					success: false,
+					message: 'User not found...'
+				});
+			} else if(!user.isPasswordValid(req.query.password)) {
+				return res.json({
+					success: false,
+					message: 'Invalid password...'
+				})
+			}
+
+			// update here
 			user.password = req.body.password;
 
 			user.save(function(saveErr) {

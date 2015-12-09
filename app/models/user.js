@@ -37,9 +37,7 @@ UserSchema.pre('save', function(next) {
 });
 
 UserSchema.methods.isAuthenticated = function(password) {
-	var hash = hashMethod(password + this.salt);
-
-	if(hash.toString() === this.password) {
+	if(this.isPasswordValid(password)) {
 		// Create a permanent token
 		this.token = uid(128);
 
@@ -51,8 +49,18 @@ UserSchema.methods.isAuthenticated = function(password) {
 	}
 };
 
+UserSchema.methods.isPasswordValid = function(password) {
+	var hash = hashMethod(password + this.salt);
+
+	if(hash.toString() === this.password) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 UserSchema.methods.isTokenValid = function(token) {
-	
+
 }
 
 module.exports = mongoose.model('User', UserSchema);
