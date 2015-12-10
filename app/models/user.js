@@ -6,10 +6,21 @@ var uid = require('rand-token').uid;
 var Schema = mongoose.Schema;
 
 var UserSchema = new Schema({
-	login: { type: String, unique: true, index: true, required: true },
+	login: { 
+		type: String, 
+		unique: true, 
+		index: true, 
+		required: true,
+		validate: {
+			validator: function(str) {
+				return /^[a-z0-9]{3,}$/i.test(str);
+			},
+			message: '{VALUE} is not a valid username!'
+		} 
+	},
 	password: { type: String, required: true },
 	salt: Buffer,
-	token: { type: String, unique: true, index: true, default: null },
+	token: { type: String, index: true, default: null },
 	created_at: { type: Date },
 	updated_at: { type: Date }
 });

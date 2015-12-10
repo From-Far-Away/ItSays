@@ -11,7 +11,7 @@ module.exports = function(router, isTokenValid) {
 			if(err) {
 				res.json({
 					success: false,
-					message: err
+					message: 'User creation failed...'
 				});
 			}
 
