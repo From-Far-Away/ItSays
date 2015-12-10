@@ -15,7 +15,7 @@ var UserSchema = new Schema({
 			validator: function(str) {
 				return /^[a-z0-9]{3,}$/i.test(str);
 			},
-			message: '{VALUE} is not a valid username!'
+			message: 'A valid username should only contains aphanumerical characters!'
 		} 
 	},
 	password: { type: String, required: true },

@@ -9,6 +9,7 @@ module.exports = function(router) {
 
 			User.findOne({ token: token }, function(err, user) {
 				if(err || !user) {
+					console.log(err);
 					res.json({
 						success: false,
 						message: 'Token invalid!'

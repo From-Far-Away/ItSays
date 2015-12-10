@@ -9,6 +9,7 @@ module.exports = function(router, isTokenValid) {
 
 		user.save(function(err) {
 			if(err) {
+				console.log(err);
 				res.json({
 					success: false,
 					message: 'User creation failed...'
@@ -48,6 +49,7 @@ module.exports = function(router, isTokenValid) {
 	router.put('/user/:id', function(req, res) {
 		User.findById(req.params.id, function(findErr, user) {
 			if(findErr) {
+				console.log(findErr);
 				return res.json({
 					success: false,
 					message: findErr
@@ -71,6 +73,7 @@ module.exports = function(router, isTokenValid) {
 
 			user.save(function(saveErr) {
 				if(saveErr) {
+					console.log(saveErr);
 					res.json({
 						success: false,
 						message: saveErr
