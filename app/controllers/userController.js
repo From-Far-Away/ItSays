@@ -4,7 +4,7 @@ module.exports = function(router, isTokenValid) {
 	router.post('/signup', function(req, res) {
 		var user = new User();
 		
-		user.login = req.body.login;
+		user.username = req.body.username;
 		user.password = req.body.password;
 
 		user.save(function(err) {
@@ -18,19 +18,19 @@ module.exports = function(router, isTokenValid) {
 
 			res.json({ 
 				success: true,
-				message: 'User ' + user.login + ' created!'
+				message: 'User ' + user.username + ' created!'
 			});
 		});
 	});
 
 	router.get('/signin', function(req, res) {
-		User.findOne({ login: req.query.username }, function(err, user) {
+		User.findOne({ username: req.query.username }, function(err, user) {
 			if(user.isAuthenticated(req.query.password)) {
 				res.json({ 
 					success: true,
 					token: user.token,
 					id: user.id,
-					message: 'Authenticated as ' + user.login
+					message: 'Authenticated as ' + user.username
 				});
 			} else {
 				res.json({ 
@@ -76,7 +76,7 @@ module.exports = function(router, isTokenValid) {
 					console.log(saveErr);
 					res.json({
 						success: false,
-						message: saveErr
+						message: 'Oups... Something went wrong!'
 					});
 				}
 

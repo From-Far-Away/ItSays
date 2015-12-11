@@ -6,7 +6,7 @@ var uid = require('rand-token').uid;
 var Schema = mongoose.Schema;
 
 var UserSchema = new Schema({
-	login: { 
+	username: { 
 		type: String, 
 		unique: true, 
 		index: true, 
