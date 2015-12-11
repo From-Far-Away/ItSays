@@ -52,7 +52,7 @@ module.exports = function(router, isTokenValid) {
 				console.log(findErr);
 				return res.json({
 					success: false,
-					message: findErr
+					message: 'Oups... Something went wrong'
 				});
 			}
 
@@ -85,6 +85,37 @@ module.exports = function(router, isTokenValid) {
 					message: 'Update completed!'
 				});
 			});
+		});
+	});
+
+	router.put('/logout', function(req, res) {
+		var token = req.headers['x-access-token'] || req.query.token;
+
+		User.findOne({ token: token }, function(err, user) {
+			if(err || !user) {
+				console.log(err);
+				res.json({
+					success: false,
+					message: 'Token invalid!'
+				});
+			} else {
+				user.token = null;
+
+				user.save(function(saveErr) {
+					if(saveErr) {
+						console.log(saveErr);
+						res.json({
+							success: false,
+							message: 'Oups... Something went wrong!'
+						});
+					}
+
+					res.json({
+						success: true,
+						message: 'Disconnected!'
+					});
+				});
+			}
 		});
 	});
 }
