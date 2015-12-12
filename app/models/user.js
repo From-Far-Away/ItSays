@@ -42,7 +42,7 @@ UserSchema.pre('save', function(next) {
 	next();
 });
 
-UserSchema.methods.isAuthenticated = function(password) {
+UserSchema.methods.getToken = function(password) {
 	var token = new Token().createToken(this.id);
 
 	if(this.isPasswordValid(password) && token) {

@@ -26,7 +26,7 @@ module.exports = function(router, isTokenValid) {
 
 	router.get('/signin', function(req, res) {
 		User.findOne({ username: req.query.username }, function(err, user) {
-			var tokenAccess = user.isAuthenticated(req.query.password);
+			var tokenAccess = user.getToken(req.query.password);
 
 			if(tokenAccess) {
 				res.json({ 
