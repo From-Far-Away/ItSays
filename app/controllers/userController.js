@@ -1,4 +1,5 @@
 var User = require('../models/user');
+var Token = require('../models/token');
 
 module.exports = function(router, isTokenValid) {
 	router.post('/signup', function(req, res) {
@@ -25,10 +26,12 @@ module.exports = function(router, isTokenValid) {
 
 	router.get('/signin', function(req, res) {
 		User.findOne({ username: req.query.username }, function(err, user) {
-			if(user.isAuthenticated(req.query.password)) {
+			var tokenAccess = user.isAuthenticated(req.query.password);
+
+			if(tokenAccess) {
 				res.json({ 
 					success: true,
-					token: user.token,
+					token: tokenAccess,
 					id: user.id,
 					message: 'Authenticated as ' + user.username
 				});
@@ -42,80 +45,51 @@ module.exports = function(router, isTokenValid) {
 		});
 	});
 
-	// -------- TOKEN VERIFICATION FIREWALL
+	router.put('/user/edit/', isTokenValid, function(req, res) {
+		var userAuth = req.user;
 
-	isTokenValid();
+		// Verify password (for security)
+		if(!userAuth.isPasswordValid(req.query.password)) {
+			return res.json({
+				success: false,
+				message: 'Invalid password...'
+			})
+		}
 
-	router.put('/user/:id', function(req, res) {
-		User.findById(req.params.id, function(findErr, user) {
-			if(findErr) {
-				console.log(findErr);
-				return res.json({
-					success: false,
-					message: 'Oups... Something went wrong'
-				});
-			}
+		// update here
+		userAuth.password = req.body.password;
 
-			if(!user) {
-				return res.json({
-					success: false,
-					message: 'User not found...'
-				});
-			} else if(!user.isPasswordValid(req.query.password)) {
-				return res.json({
-					success: false,
-					message: 'Invalid password...'
-				})
-			}
-
-			// update here
-			user.password = req.body.password;
-
-			user.save(function(saveErr) {
-				if(saveErr) {
-					console.log(saveErr);
-					res.json({
-						success: false,
-						message: 'Oups... Something went wrong!'
-					});
-				}
-
+		userAuth.save(function(saveErr) {
+			if(saveErr) {
+				console.log(saveErr);
 				res.json({
-					success: true,
-					message: 'Update completed!'
+					success: false,
+					message: 'Oups... Something went wrong!'
 				});
+			}
+
+			res.json({
+				success: true,
+				message: 'Update completed!'
 			});
 		});
 	});
 
-	router.put('/logout', function(req, res) {
-		var token = req.headers['x-access-token'] || req.query.token;
+	router.delete('/logout', isTokenValid, function(req, res) {
+		var accessToken = req.token;
 
-		User.findOne({ token: token }, function(err, user) {
-			if(err || !user) {
-				console.log(err);
+		accessToken.remove(function(remErr) {
+			if(remErr) {
 				res.json({
 					success: false,
-					message: 'Token invalid!'
-				});
-			} else {
-				user.token = null;
-
-				user.save(function(saveErr) {
-					if(saveErr) {
-						console.log(saveErr);
-						res.json({
-							success: false,
-							message: 'Oups... Something went wrong!'
-						});
-					}
-
-					res.json({
-						success: true,
-						message: 'Disconnected!'
-					});
+					message: 'Oups... Something went wrong!'
 				});
 			}
+
+			res.json({
+				success: true,
+				message: 'Disconnected'
+			});
 		});
 	});
 }

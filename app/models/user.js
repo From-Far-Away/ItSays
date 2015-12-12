@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var hashMethod = require('crypto-js/sha256');
 var crypto = require('crypto');
-var uid = require('rand-token').uid;
+var Token = require('./token');
 
 var Schema = mongoose.Schema;
 
@@ -20,7 +20,6 @@ var UserSchema = new Schema({
 	},
 	password: { type: String, required: true },
 	salt: Buffer,
-	token: { type: String, index: true, default: null },
 	created_at: { type: Date },
 	updated_at: { type: Date }
 });
@@ -28,10 +27,6 @@ var UserSchema = new Schema({
 UserSchema.pre('save', function(next) {
 	var user = this;
 	var now = new Date();
-
-	if(!user.isModified('token')) {
-		this.updated_at = now;
-	}
 
 	if(!this.created_at) {
 		this.created_at = now;
@@ -48,15 +43,12 @@ UserSchema.pre('save', function(next) {
 });
 
 UserSchema.methods.isAuthenticated = function(password) {
-	if(this.isPasswordValid(password)) {
-		// Create a permanent token
-		this.token = uid(128);
+	var token = new Token().createToken(this.id);
 
-		this.save();
-
-		return true;
+	if(this.isPasswordValid(password) && token) {
+		return token;
 	} else {
-		return false;
+		return null;
 	}
 };
 
@@ -68,10 +60,6 @@ UserSchema.methods.isPasswordValid = function(password) {
 	} else {
 		return false;
 	}
-}
-
-UserSchema.methods.isTokenValid = function(token) {
-
 }
 
 module.exports = mongoose.model('User', UserSchema);

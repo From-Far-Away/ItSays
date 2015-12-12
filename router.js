@@ -1,20 +1,30 @@
 var fs = require('fs');
+var Token = require('./app/models/token');
 var User = require('./app/models/user');
 
 module.exports = function(router) {
 
-	var isTokenValid = function() {
-		router.use(function(req, res, next) {
-			var token = req.headers['x-access-token'] || req.query.token;
+	var isTokenValid = function(req, res, next) {
+		var accessToken = req.headers['x-access-token'] || req.query.token;
 
-			User.findOne({ token: token }, function(err, user) {
-				if(err || !user) {
-					console.log(err);
-					res.json({
+		Token.findOne({ value: accessToken }, function(err, token) {
+			if(err || !token) {
+				console.log(token);
+				return next(res.json({
+					success: false,
+					message: 'Token invalid...'
+				}));
+			}
+
+			User.findById(token.userId, function(findErr, user) {
+				if(!user) {
+					return next(res.json({
 						success: false,
-						message: 'Token invalid!'
-					});
+						message: 'User not found!'
+					}));
 				} else {
+					req.user = user;
+					req.token = token;
 					next();
 				}
 			});
