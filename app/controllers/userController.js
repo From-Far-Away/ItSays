@@ -11,7 +11,7 @@ module.exports = function(router, isTokenValid) {
 		user.save(function(err) {
 			if(err) {
 				console.log(err);
-				res.json({
+				return res.json({
 					success: false,
 					message: 'User creation failed...'
 				});
@@ -26,6 +26,13 @@ module.exports = function(router, isTokenValid) {
 
 	router.get('/signin', function(req, res) {
 		User.findOne({ username: req.query.username }, function(err, user) {
+			if(err || !user) {
+				return res.json({
+					success: false,
+					message: "This username doesn't exists"
+				});
+			}
+
 			var tokenAccess = user.getToken(req.query.password);
 
 			if(tokenAccess) {
@@ -62,7 +69,7 @@ module.exports = function(router, isTokenValid) {
 		userAuth.save(function(saveErr) {
 			if(saveErr) {
 				console.log(saveErr);
-				res.json({
+				return res.json({
 					success: false,
 					message: 'Oups... Something went wrong!'
 				});
@@ -80,7 +87,7 @@ module.exports = function(router, isTokenValid) {
 
 		accessToken.remove(function(remErr) {
 			if(remErr) {
-				res.json({
+				return res.json({
 					success: false,
 					message: 'Oups... Something went wrong!'
 				});
