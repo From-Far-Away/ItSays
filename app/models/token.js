@@ -11,12 +11,17 @@ TokenSchema.methods.createToken = function(user) {
 	this.value = uid(128);
 	this.userId = user;
 
-	if(this.save) {
+	if(this.save()) {
 		return this.value;
 	} else {
 		return null;
 	}
 };
 
+TokenSchema.methods.getUser = function(user) {
+	mongoose.model('Token').findOne({ userId: user }, function(err, res) {
+		console.log('lol');
+	});
+};
 
 module.exports = mongoose.model('Token', TokenSchema);
