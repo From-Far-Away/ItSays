@@ -3,9 +3,7 @@ var hashMethod = require('crypto-js/sha256');
 var crypto = require('crypto');
 var Token = require('./token');
 
-var Schema = mongoose.Schema;
-
-var UserSchema = new Schema({
+var UserSchema = new mongoose.Schema({
 	username: { 
 		type: String, 
 		unique: true, 

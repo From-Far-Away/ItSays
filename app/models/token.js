@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var uid = require('rand-token').uid;
 
-var TokenSchema   = new mongoose.Schema({
+var TokenSchema = new mongoose.Schema({
 	value: { type: String, required: true, index: true },
 	userId: { type: String, required: true }
 });
@@ -18,9 +18,9 @@ TokenSchema.methods.createToken = function(user) {
 	}
 };
 
-TokenSchema.methods.getUser = function(user) {
-	mongoose.model('Token').findOne({ userId: user }, function(err, res) {
-		console.log('lol');
+TokenSchema.methods.getUserByToken = function(token, callback) {
+	mongoose.model('Token').findOne({ value: token }, function(err, res) {
+		callback(res);
 	});
 };
 
