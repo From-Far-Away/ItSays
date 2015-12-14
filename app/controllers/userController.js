@@ -8,31 +8,6 @@ module.exports = function(router, isTokenValid) {
 		user.username = req.body.username;
 		user.password = req.body.password;
 
-		User.findOne({ username: req.query.username }, function(err, user) {
-			if(err || !user) {
-				return res.json({
-					success: false,
-					message: "This username doesn't exists"
-				});
-			}
-
-			var tokenAccess = user.getToken(req.query.password);
-
-			if(tokenAccess) {
-				res.json({ 
-					success: true,
-					token: tokenAccess,
-					id: user.id,
-					message: 'Authenticated as ' + user.username
-				});
-			} else {
-				res.json({ 
-					success: false,
-					token: null,
-					message: 'Wrong password!'
-				});
-			}
-		});
 		user.save(function(err) {
 			if(err) {
 				console.log(err);
