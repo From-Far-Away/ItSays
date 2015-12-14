@@ -23,4 +23,10 @@ var PublicationSchema = new mongoose.Schema({
 	}
 });
 
+PublicationSchema.methods.getPublications = function(callback) {
+	mongoose.model('Publication').find({}, function(err, res) {
+		callback(res);
+	});
+};
+
 module.exports = mongoose.model('Publication', PublicationSchema);

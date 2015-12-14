@@ -46,4 +46,25 @@ module.exports = function(router, isTokenValid) {
 			}
 		});
 	});
+
+	router.get('/publications', function(req, res) {
+		
+		var accessToken = req.headers["x-access-token"];
+
+    	new Token().getUserByToken(accessToken, function(user){
+    		if(user !== null) {
+				new Publication().getPublications(function(publications){
+					res.json({ 
+						success: true,
+						publications: publications
+					});
+				});
+			} else {
+				res.json({
+					success: false,
+					message: 'Wrong access token :('
+				});
+			}
+		});
+	});
 }
