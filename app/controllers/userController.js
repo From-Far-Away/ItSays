@@ -40,7 +40,7 @@ module.exports = function(router, isTokenValid) {
 					success: true,
 					token: tokenAccess,
 					id: user.id,
-					username: username
+					username: user.username
 				});
 			} else {
 				res.json({ 
