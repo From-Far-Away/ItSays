@@ -1,6 +1,7 @@
 var User = require('../models/user');
 var Token = require('../models/token');
 var Publication = require('../models/publication');
+var errorCodes = require('../../errorCodes');
 
 module.exports = function(router, isTokenValid) {
 	router.post('/publish', function(req, res) {
@@ -28,12 +29,11 @@ module.exports = function(router, isTokenValid) {
 						console.log(err);
 						return res.json({
 							success: false,
-							message: 'Publish failed...'
+							errorCode: errorCodes._publishFailed
 						});
 					}
 					res.json({ 
-						success: true,
-						message: 'Publish succeeded!'
+						success: true
 					});
 				});
 
@@ -41,7 +41,7 @@ module.exports = function(router, isTokenValid) {
 			} else {
 				res.json({
 					success: false,
-					message: 'Wrong access token :('
+					errorCode: errorCodes._invalidAccessToken
 				});
 			}
 		});
@@ -62,7 +62,7 @@ module.exports = function(router, isTokenValid) {
 			} else {
 				res.json({
 					success: false,
-					message: 'Wrong access token :('
+					errorCode: errorCodes._invalidAccessToken
 				});
 			}
 		});

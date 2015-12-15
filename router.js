@@ -1,6 +1,7 @@
 var fs = require('fs');
 var Token = require('./app/models/token');
 var User = require('./app/models/user');
+var errorCodes = require('./errorCodes');
 
 module.exports = function(router) {
 
@@ -12,7 +13,7 @@ module.exports = function(router) {
 				console.log(token);
 				return next(res.json({
 					success: false,
-					message: 'Token invalid...'
+					errorCode: errorCodes._invalidAccessToken
 				}));
 			}
 
@@ -20,7 +21,7 @@ module.exports = function(router) {
 				if(!user) {
 					return next(res.json({
 						success: false,
-						message: 'User not found!'
+						errorCode: errorCodes._userNotFound
 					}));
 				} else {
 					req.user = user;

@@ -1,5 +1,6 @@
 var User = require('../models/user');
 var Token = require('../models/token');
+var errorCodes = require('../../errorCodes');
 
 module.exports = function(router, isTokenValid) {
 	router.post('/signup', function(req, res) {
@@ -13,13 +14,12 @@ module.exports = function(router, isTokenValid) {
 				console.log(err);
 				return res.json({
 					success: false,
-					message: 'User creation failed...'
+					errorCode: errorCodes._userSignUpFailed
 				});
 			}
 
 			res.json({ 
-				success: true,
-				message: 'User ' + user.username + ' created!'
+				success: true
 			});
 		});
 	});
@@ -29,7 +29,7 @@ module.exports = function(router, isTokenValid) {
 			if(err || !user) {
 				return res.json({
 					success: false,
-					message: "This username doesn't exists"
+					errorCode: errorCodes._invalidUsername
 				});
 			}
 
@@ -40,13 +40,12 @@ module.exports = function(router, isTokenValid) {
 					success: true,
 					token: tokenAccess,
 					id: user.id,
-					message: 'Authenticated as ' + user.username
+					username: username
 				});
 			} else {
 				res.json({ 
 					success: false,
-					token: null,
-					message: 'Wrong password!'
+					errorCode: errorCodes._userAuthentificationFailed
 				});
 			}
 		});
@@ -59,7 +58,7 @@ module.exports = function(router, isTokenValid) {
 		if(!userAuth.isPasswordValid(req.query.password)) {
 			return res.json({
 				success: false,
-				message: 'Invalid password...'
+				errorCode: errorCodes._invalidPassword
 			})
 		}
 
@@ -71,13 +70,12 @@ module.exports = function(router, isTokenValid) {
 				console.log(saveErr);
 				return res.json({
 					success: false,
-					message: 'Oups... Something went wrong!'
+					errorCode: errorCodes._userAuthentificationFailed
 				});
 			}
 
 			res.json({
-				success: true,
-				message: 'Update completed!'
+				success: true
 			});
 		});
 	});
@@ -89,13 +87,12 @@ module.exports = function(router, isTokenValid) {
 			if(remErr) {
 				return res.json({
 					success: false,
-					message: 'Oups... Something went wrong!'
+					errorCode: errorCodes._logoutFailed
 				});
 			}
 
 			res.json({
-				success: true,
-				message: 'Disconnected'
+				success: true
 			});
 		});
 	});
