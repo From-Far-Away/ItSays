@@ -1,6 +1,4 @@
 var mongoose = require('mongoose');
-var Token = require('./token');
-var User = require('./user');
 
 var PublicationSchema = new mongoose.Schema({
 	text: {
