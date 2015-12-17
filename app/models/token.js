@@ -3,25 +3,29 @@ var uid = require('rand-token').uid;
 
 var TokenSchema = new mongoose.Schema({
 	value: { type: String, required: true, index: true },
-	userId: { type: String, required: true }
+	user_id: { type: String, required: true },
+	created_at: { type: Date }
 });
 
-TokenSchema.methods.createToken = function(user) {
-	// Create a permanent token
-	this.value = uid(128);
-	this.userId = user;
+TokenSchema.pre('save', function(next) {
+	var now = new Date();
 
-	if(this.save()) {
-		return this.value;
-	} else {
-		return null;
+	this.created_at = now;
+
+	next();
+});
+
+TokenSchema.methods.hasExpired = function() {
+	var createdDate = this.created_at.getTime();
+	var now = new Date().getTime();
+
+	var difference = now - createdDate;
+
+	if(difference > process.env.TOKEN_DURATION) {
+		return true;
 	}
-};
 
-TokenSchema.methods.getUserByToken = function(token, callback) {
-	mongoose.model('Token').findOne({ value: token }, function(err, res) {
-		callback(res);
-	});
-};
+	return false;
+}
 
 module.exports = mongoose.model('Token', TokenSchema);

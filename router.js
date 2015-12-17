@@ -17,7 +17,7 @@ module.exports = function(router) {
 				}));
 			}
 
-			User.findById(token.userId, function(findErr, user) {
+			User.findById(token.user_id, function(findErr, user) {
 				if(!user) {
 					return next(res.json({
 						success: false,

@@ -33,21 +33,48 @@ module.exports = function(router, isTokenValid) {
 				});
 			}
 
-			var tokenAccess = user.getToken(req.query.password);
+			Token.findOne({ user_id: user.id }, function(err, token) {
+				if(err) {
+					console.log(err);
+					return res.json({ 
+						success: false,
+						errorCode: errorCodes._userAuthentificationFailed
+					});
+				}
 
-			if(tokenAccess) {
+				var newToken = false;
+				var genToken = user.getToken(req.query.password);
+
+				// Is the user hasn't any token create one
+				if(!token) {
+					newToken = true;
+				} else if(token.hasExpired()) { // Is it's token has expired remake it
+					// Remove the token because of expiration
+					token.remove();
+					newToken = true;
+				}
+
+				// Save the new token
+				if(newToken) {
+					token = genToken;
+
+					token.save(function(err) {
+						if(err) {
+							console.log(err);
+							return res.json({ 
+								success: false,
+								errorCode: errorCodes._userAuthentificationFailed
+							});
+						}
+					});
+				}
+
 				res.json({ 
 					success: true,
-					token: tokenAccess,
-					id: user.id,
+					token: token.value,
 					username: user.username
 				});
-			} else {
-				res.json({ 
-					success: false,
-					errorCode: errorCodes._userAuthentificationFailed
-				});
-			}
+			});
 		});
 	});
 
