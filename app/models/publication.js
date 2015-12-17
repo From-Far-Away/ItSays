@@ -3,24 +3,29 @@ var Token = require('./token');
 var User = require('./user');
 
 var PublicationSchema = new mongoose.Schema({
-	text : {
+	text: {
 		type: String, 
 		required: true
 	},
-	langage : {
+	language: {
 		type: String, 
-		required: true,
-		validator: {
-			validator: function(str) {
-				return /^[a-z]{2}$/.test(str);
-			},
-			message: 'The langage must comply with ISO 639-1 (two lowercase letters)'
-		}
+		required: true
 	},
-	created_by : {
+	created_by: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "User"
+	},
+	created_at: {
+		type: Date
 	}
+});
+
+PublicationSchema.pre('save', function(next) {
+	var now = new Date();
+
+	this.created_at = now;
+
+	next();
 });
 
 module.exports = mongoose.model('Publication', PublicationSchema);

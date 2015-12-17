@@ -8,7 +8,9 @@ ErrorCodes.prototype = {
 	_userAuthentificationFailed: "itsays_error_userAuthentificationFailed",
 	_userSignUpFailed: "itsays_error_userSignUpFailed",
 	_invalidPassword: "itsays_error_invalidPassword",
-	_invalidUsername: "itsays_error_invalidUsername"
+	_invalidUsername: "itsays_error_invalidUsername",
+	_invalidPublication: "itsays_error_invalidPublication",
+	_denied: "itsays_error_denied"
 };
 
 module.exports = new ErrorCodes();
