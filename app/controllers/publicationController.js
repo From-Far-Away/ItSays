@@ -1,7 +1,8 @@
 var User = require('../models/user');
-var Token = require('../models/token');
 var Publication = require('../models/publication');
 var errorCodes = require('../../errorCodes');
+var Audio = require('../models/audio');
+var Multer = require('multer');
 
 module.exports = function(router, isTokenValid) {
 	router.post('/publication', isTokenValid, function(req, res) {
@@ -36,6 +37,7 @@ module.exports = function(router, isTokenValid) {
 	});
 
 	router.get('/publication/:id', isTokenValid, function(req, res) {
+		//Publication.findById(req.params.id).populate('audio').exec(function(err, publication) {
 		Publication.findById(req.params.id, function(err, publication) {
 			if(err || !publication) {
 				console.log(err);
@@ -55,8 +57,7 @@ module.exports = function(router, isTokenValid) {
 
 				res.json({
 					success: true,
-					publication: publication,
-					user: user.id,
+					publication: publication.populate('audio'),
 					username: user.username
 				});
 			});
@@ -72,8 +73,6 @@ module.exports = function(router, isTokenValid) {
 					errorCode: errorCodes._invalidPublication
 				});
 			}
-
-			console.log(req.user.id + ' : ' + publication.created_by);
 
 			if(req.user.id == publication.created_by) {
 				publication.remove(function(err) {

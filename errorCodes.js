@@ -10,7 +10,8 @@ ErrorCodes.prototype = {
 	_invalidPassword: "itsays_error_invalidPassword",
 	_invalidUsername: "itsays_error_invalidUsername",
 	_invalidPublication: "itsays_error_invalidPublication",
-	_denied: "itsays_error_denied"
+	_denied: "itsays_error_denied",
+	_audioFailure: "itsays_error_audioFailure"
 };
 
 module.exports = new ErrorCodes();

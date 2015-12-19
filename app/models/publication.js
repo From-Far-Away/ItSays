@@ -9,9 +9,12 @@ var PublicationSchema = new mongoose.Schema({
 		type: String, 
 		required: true
 	},
-	created_by: {
+	audio: [{
 		type: mongoose.Schema.Types.ObjectId,
-		ref: "User"
+		ref: "Audio"
+	}],
+	created_by: {
+		type: String
 	},
 	created_at: {
 		type: Date

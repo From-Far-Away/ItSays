@@ -10,22 +10,22 @@ module.exports = function(router) {
 
 		Token.findOne({ value: accessToken }, function(err, token) {
 			if(err || !token) {
-				console.log(token);
-				return next(res.json({
+				res.json({
 					success: false,
 					errorCode: errorCodes._invalidAccessToken
-				}));
+				});
+				return next('Token not found');
 			}
 
 			User.findById(token.user_id, function(findErr, user) {
 				if(!user) {
-					return next(res.json({
+					res.json({
 						success: false,
 						errorCode: errorCodes._userNotFound
-					}));
+					});
+					return next('User not found');
 				} else {
-					req.user = user;
-					req.token = token;
+					req.user = user.id;
 					next();
 				}
 			});

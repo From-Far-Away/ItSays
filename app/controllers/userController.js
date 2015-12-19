@@ -108,7 +108,7 @@ module.exports = function(router, isTokenValid) {
 	});
 
 	router.delete('/logout', isTokenValid, function(req, res) {
-		var accessToken = req.token;
+		var accessToken = req.headers['x-access-token'];
 
 		accessToken.remove(function(remErr) {
 			if(remErr) {
