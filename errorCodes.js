@@ -11,7 +11,8 @@ ErrorCodes.prototype = {
 	_invalidUsername: "itsays_error_invalidUsername",
 	_invalidPublication: "itsays_error_invalidPublication",
 	_denied: "itsays_error_denied",
-	_audioFailure: "itsays_error_audioFailure"
+	_audioFailure: "itsays_error_audioFailure",
+	_commentFailure: "itsays_error_commentFailure"
 };
 
 module.exports = new ErrorCodes();

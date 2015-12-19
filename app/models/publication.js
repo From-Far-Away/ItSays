@@ -13,6 +13,10 @@ var PublicationSchema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "Audio"
 	}],
+	comments: [{
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "Comment"
+	}],
 	created_by: String,
 	created_at: Date
 });

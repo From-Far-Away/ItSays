@@ -49,7 +49,7 @@ module.exports = function(router, isTokenValid) {
 			User.findById(publication.created_by, function(err, user) {
 				if(err) {
 					console.log(err);
-					return res.json({ // _UNMANAGED
+					return res.json({ // _NONMANAGED
 						success: false
 					});
 				}
