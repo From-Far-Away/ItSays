@@ -13,18 +13,16 @@ var PublicationSchema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "Audio"
 	}],
-	created_by: {
-		type: String
-	},
-	created_at: {
-		type: Date
-	}
+	created_by: String,
+	created_at: Date
 });
 
 PublicationSchema.pre('save', function(next) {
 	var now = new Date();
 
-	this.created_at = now;
+	if(!this.created_at) {
+		this.created_at = now;
+	}
 
 	next();
 });

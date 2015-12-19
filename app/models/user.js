@@ -19,8 +19,8 @@ var UserSchema = new mongoose.Schema({
 	},
 	password: { type: String, required: true },
 	salt: Buffer,
-	created_at: { type: Date },
-	updated_at: { type: Date }
+	created_at: Date,
+	updated_at: Date
 });
 
 UserSchema.pre('save', function(next) {
