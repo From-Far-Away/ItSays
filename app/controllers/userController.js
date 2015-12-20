@@ -110,16 +110,26 @@ module.exports = function(router, isTokenValid) {
 	router.delete('/logout', isTokenValid, function(req, res) {
 		var accessToken = req.headers['x-access-token'];
 
-		accessToken.remove(function(remErr) {
-			if(remErr) {
-				return res.json({
+		Token.findOne({ value: accessToken }, function(err, token) {
+			if(err || !token) {
+				res.json({
 					success: false,
-					errorCode: errorCodes._logoutFailed
+					errorCode: errorCodes._invalidAccessToken
 				});
+				return next('Token not found');
 			}
 
-			res.json({
-				success: true
+			accessToken.remove(function(remErr) {
+				if(remErr) {
+					return res.json({
+						success: false,
+						errorCode: errorCodes._logoutFailed
+					});
+				}
+
+				res.json({
+					success: true
+				});
 			});
 		});
 	});
