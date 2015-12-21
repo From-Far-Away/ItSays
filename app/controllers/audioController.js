@@ -5,7 +5,7 @@ var Multer = require('multer');
 
 module.exports = function(router, isTokenValid) {
 	// Multer can manage multipart header
-	router.post('/publication/:id/audio', [ isTokenValid, Multer().single() ], function(req, res) {
+	router.post('/publication/:id/audio', [ isTokenValid, Multer().single('audio') ], function(req, res) {
 		Publication.findById(req.params.id, function(err, publication) {
 			if(err || !publication) {
 				console.log(err);
@@ -16,7 +16,7 @@ module.exports = function(router, isTokenValid) {
 			}
 
 			var audio = new Audio({ 
-				data: req.body.binary,
+				data: req.file.buffer,
 				created_by: req.user 
 			});
 
