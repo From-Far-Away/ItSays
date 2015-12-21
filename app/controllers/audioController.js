@@ -14,9 +14,10 @@ module.exports = function(router, isTokenValid) {
 					errorCode: errorCodes._invalidPublication
 				});
 			}
-
+			
 			var audio = new Audio({ 
 				data: req.file.buffer,
+				mime: req.file.mimetype,
 				created_by: req.user 
 			});
 

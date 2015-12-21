@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 
 var AudioSchema = new mongoose.Schema({
 	data: Buffer,
+	mime: String,
 	created_by: String,
 	created_at: Date
 });
