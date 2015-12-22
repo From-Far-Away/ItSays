@@ -41,38 +41,28 @@ module.exports = function(router, isTokenValid) {
 		});
 	});
 
-	router.get('/publication/:id/audio/:audio_id', isTokenValid, function(req, res) {
-		Publication.findById(req.params.id, function(err, publication) {
-			if(err || !publication) {
+	router.get('/audio/:audio_id', isTokenValid, function(req, res) {
+		Audio.findById(req.params.audio_id, function(err, audio) {
+			if(err || !audio) {
 				console.log(err);
 				return res.json({
 					success: false,
-					errorCode: errorCodes._invalidPublication
+					errorCode: errorCodes._audioFailure
 				});
 			}
 
-			Audio.findById(req.params.audio_id, function(err, audio) {
-				if(err || !audio) {
-					console.log(err);
-					return res.json({
-						success: false,
-						errorCode: errorCodes._audioFailure
-					});
+			res.writeHead(
+				200,
+				"OK",
+				{
+					"Content-Type": audio.mime,
+					"Content-Length": audio.data.length
 				}
+			);
 
-				res.writeHead(
-					200,
-					"OK",
-					{
-						"Content-Type": audio.mime,
-						"Content-Length": audio.data.length
-					}
-				);
-
-				new BufferStream(audio.data)
-					.pipe(res);
-				
-			});
+			new BufferStream(audio.data)
+				.pipe(res);
+			
 		});
 	});
 
