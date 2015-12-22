@@ -2,6 +2,7 @@ var Publication = require('../models/publication');
 var errorCodes = require('../../errorCodes');
 var Audio = require('../models/audio');
 var Multer = require('multer');
+var BufferStream = require('../../bufferStream');
 
 module.exports = function(router, isTokenValid) {
 	// Multer can manage multipart header
@@ -14,7 +15,7 @@ module.exports = function(router, isTokenValid) {
 					errorCode: errorCodes._invalidPublication
 				});
 			}
-			
+
 			var audio = new Audio({ 
 				data: req.file.buffer,
 				mime: req.file.mimetype,
@@ -36,6 +37,41 @@ module.exports = function(router, isTokenValid) {
 				res.json({
 					success: true
 				});
+			});
+		});
+	});
+
+	router.get('/publication/:id/audio/:audio_id', isTokenValid, function(req, res) {
+		Publication.findById(req.params.id, function(err, publication) {
+			if(err || !publication) {
+				console.log(err);
+				return res.json({
+					success: false,
+					errorCode: errorCodes._invalidPublication
+				});
+			}
+
+			Audio.findById(req.params.audio_id, function(err, audio) {
+				if(err || !audio) {
+					console.log(err);
+					return res.json({
+						success: false,
+						errorCode: errorCodes._audioFailure
+					});
+				}
+
+				res.writeHead(
+					200,
+					"OK",
+					{
+						"Content-Type": audio.mime,
+						"Content-Length": audio.data.length
+					}
+				);
+
+				new BufferStream(audio.data)
+					.pipe(res);
+				
 			});
 		});
 	});
