@@ -1,7 +1,6 @@
 var stream = require('stream');
 var util = require('util');
 var http = require('http');
-var fs = require('fs');
 
 // @credits to Ben Nadel
 

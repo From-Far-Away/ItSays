@@ -119,7 +119,7 @@ module.exports = function(router, isTokenValid) {
 				return next('Token not found');
 			}
 
-			accessToken.remove(function(remErr) {
+			token.remove(function(remErr) {
 				if(remErr) {
 					return res.json({
 						success: false,
