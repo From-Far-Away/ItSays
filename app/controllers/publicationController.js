@@ -37,7 +37,7 @@ module.exports = function(router, isTokenValid) {
 	});
 
 	router.get('/publication/:id', isTokenValid, function(req, res) {
-		Publication.findById(req.params.id).populate('audio').populate('comments').exec(function(err, publication) {
+		Publication.findById(req.params.id).populate('comments').exec(function(err, publication) {
 			if(err || !publication) {
 				console.log(err);
 				return res.json({
