@@ -4,13 +4,11 @@ var AudioSchema = new mongoose.Schema({
 	data: Buffer,
 	mime: String,
 	created_by: String,
-	created_at: Date
+	created_at: String
 });
 
 AudioSchema.pre('save', function(next) {
-	var now = new Date();
-
-	this.created_at = now;
+	this.created_at = moment().format('YYYY-MM-DD HH:mm');
 
 	next();
 });

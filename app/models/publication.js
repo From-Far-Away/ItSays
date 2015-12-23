@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var moment = require('moment');
 
 var PublicationSchema = new mongoose.Schema({
 	text: {
@@ -17,15 +18,16 @@ var PublicationSchema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "Comment"
 	}],
-	created_by: String,
-	created_at: Date
+	created_by: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "User"
+	},
+	created_at: String
 });
 
 PublicationSchema.pre('save', function(next) {
-	var now = new Date();
-
 	if(!this.created_at) {
-		this.created_at = now;
+		this.created_at = moment().format('YYYY-MM-DD HH:mm');
 	}
 
 	next();

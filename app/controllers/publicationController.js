@@ -28,7 +28,7 @@ module.exports = function(router, isTokenValid) {
 	});
 
 	router.get('/publications', isTokenValid, function(req, res) {
-		Publication.find({}, function(err, publications) {
+		Publication.find({}).populate('created_by', 'username').exec(function(err, publications) {
 			res.json({ 
 				success: true,
 				publications: publications
