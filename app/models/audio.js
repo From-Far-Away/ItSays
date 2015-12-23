@@ -4,7 +4,11 @@ var moment = require('moment');
 var AudioSchema = new mongoose.Schema({
 	data: Buffer,
 	mime: String,
-	created_by: String,
+	created_by: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User'
+	},
+	created_by_username: String,
 	created_at: String
 });
 

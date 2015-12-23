@@ -19,7 +19,8 @@ module.exports = function(router, isTokenValid) {
 			var audio = new Audio({ 
 				data: req.file.buffer,
 				mime: req.file.mimetype,
-				created_by: req.user 
+				created_by: req.user,
+				created_by_username: req.username 
 			});
 
 			audio.save(function(err) {
@@ -42,7 +43,7 @@ module.exports = function(router, isTokenValid) {
 	});
 
 	router.get('/audio/:audio_id', isTokenValid, function(req, res) {
-		Audio.findById(req.params.audio_id, function(err, audio) {
+		Audio.findById(req.params.audio_id).populate('created_by', 'username').exec(function(err, audio) {
 			if(err || !audio) {
 				console.log(err);
 				return res.json({

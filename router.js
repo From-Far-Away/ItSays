@@ -26,6 +26,7 @@ module.exports = function(router) {
 					return next('User not found');
 				} else {
 					req.user = user.id;
+					req.username = user.username;
 					next();
 				}
 			});

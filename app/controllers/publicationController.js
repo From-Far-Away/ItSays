@@ -37,7 +37,8 @@ module.exports = function(router, isTokenValid) {
 	});
 
 	router.get('/publication/:id', isTokenValid, function(req, res) {
-		Publication.findById(req.params.id).populate('comments').exec(function(err, publication) {
+		Publication.findById(req.params.id)
+			.populate('audio', 'created_by_username created_at').exec(function(err, publication) {
 			if(err || !publication) {
 				console.log(err);
 				return res.json({
@@ -46,19 +47,9 @@ module.exports = function(router, isTokenValid) {
 				});
 			}
 
-			User.findById(publication.created_by, function(err, user) {
-				if(err) {
-					console.log(err);
-					return res.json({ // _NONMANAGED
-						success: false
-					});
-				}
-
-				res.json({
-					success: true,
-					publication: publication,
-					username: user.username
-				});
+			res.json({
+				success: true,
+				publication: publication
 			});
 		});
 	});
