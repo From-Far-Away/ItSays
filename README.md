@@ -15,7 +15,7 @@ In any folder :
 git clone git@github.com:From-Far-Away/ItSays.git
 cd ItSays
 npm install
-echo "DB_HOST=<your_host>\r\nDB_USER=<your_user_credentials>\r\nDB_PASSWORD=<password>\r\nTOKEN_DURATION=<token duration in milliseconds>" >> .env
+echo -e "DB_HOST=<your_host>\r\nDB_USER=<your_user_credentials>\r\nDB_PASSWORD=<password>\r\nTOKEN_DURATION=<token duration in milliseconds>" >> .env
 ```
 
 And to run it :
